@@ -1,0 +1,786 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link id="csslink" rel=stylesheet href="dat/skill.css" type="text/css">
+<link rel="shortcut icon" href="favicon.ico">
+<title>Guild Renewal</title>
+<style>
+body{
+	font-size:9pt;
+	background-image:url(img/back_gld.png);
+	background-repeat:no-repeat;
+}
+</style>
+
+<script language="JavaScript" src="dat/skill4.js"></script>
+<script language="JavaScript" src="dat/skilllist2.js"></script>
+<script language="JavaScript">
+
+var GAPP_P = KPRC_P = EMDV_P = GRSC_P
+	= BLDG_P = EXTG_P = BTOD_P = RGNR_P
+	= RSTR_P = EMGN_P = GLDS_P = WOGL_P
+	= SLOC_P = SHKE_P
+	= 0;
+
+var GAPP_M = 1;
+var KPRC_M = 1;
+var EMDV_M = 1;
+var GRSC_M = 1;
+var BLDG_M = 3;
+var EXTG_M = 10;
+var BTOD_M = 1;
+var RGNR_M = 3;
+var RSTR_M = 1;
+var EMGN_M = 1;
+var GLDS_M = 5;
+var WOGL_M = 5;
+var SLOC_M = 5;
+var SHKE_M = 5;
+
+var GDLV_P = 1;
+var ver = "10";
+
+// 各スキルのフラグ
+
+function GAPP_F(){
+	Point(GAPP_P,1,"GAPP");
+	if(GAPP_P<1){
+		Disable("KPRC"); if(KPRC_P>0){ KPRC_P=0; KPRC_F();}
+		Disable("GRSC"); if(GRSC_P>0){ GRSC_P=0; GRSC_F();}
+		Disable("BTOD"); if(BTOD_P>0){ BTOD_P=0; BTOD_F();}
+	}if(GAPP_P>=1){
+		Visible("KPRC"); Visible("GRSC");
+	}if(GAPP_P>=1 && EXTG_P>=2){
+		Visible("BTOD");
+	}
+}
+function KPRC_F(){
+	Point(KPRC_P,1,"KPRC");
+	if(GAPP_P<1 && KPRC_P>0){
+		GAPP_P=1; Visible("KPRC"); GAPP_F();
+	}
+}
+function EMDV_F(){	Point(EMDV_P,1,"EMDV");}
+function GRSC_F(){
+	Point(GRSC_P,1,"GRSC");
+	if(GRSC_P<1){
+		Disable("EMGN"); if(EMGN_P>0){ EMGN_P=0; EMGN_F();}
+	}if(GRSC_P>=1 && RGNR_P>=1){
+		Visible("EMGN");
+	}if(GAPP_P<1 && GRSC_P>0){
+		GAPP_P=1; Visible("GRSC"); GAPP_F();
+	}
+}
+function BLDG_F(){	Point(BLDG_P,3,"BLDG");}
+function EXTG_F(){
+	Point(EXTG_P,10,"EXTG");
+	if(EXTG_P<2){
+		Disable("BTOD"); if(BTOD_P>0){ BTOD_P=0; BTOD_F();}
+	}if(EXTG_P>=2 && GAPP_P>=1){
+		Visible("BTOD");
+	}if(EXTG_P<5){
+		Disable("RGNR"); if(RGNR_P>0){ RGNR_P=0; RGNR_F();}
+	}if(EXTG_P>=5 && BTOD_P>=1){
+		Visible("RGNR");
+	}
+}
+function BTOD_F(){
+	Point(BTOD_P,1,"BTOD");
+	if(BTOD_P<1){
+		Disable("RGNR"); if(RGNR_P>0){ RGNR_P=0; RGNR_F();}
+	}if(BTOD_P>=1 && EXTG_P>=5){
+		Visible("RGNR");
+	}if(EXTG_P<2 && BTOD_P>0){
+		EXTG_P=2; Visible("EXTG"); EXTG_F();
+	}if(GAPP_P<1 && BTOD_P>0){
+		GAPP_P=1; Visible("BTOD"); GAPP_F();
+	}
+}
+function RGNR_F(){
+	Point(RGNR_P,3,"RGNR");
+	if(RGNR_P<1){
+		Disable("EMGN"); if(EMGN_P>0){ EMGN_P=0; EMGN_F();}
+		Disable("RSTR"); if(RSTR_P>0){ RSTR_P=0; RSTR_F();}
+	}if(RGNR_P>=1 && GRSC_P>=1){
+		Visible("EMGN");
+	}if(RGNR_P>=1){
+		Visible("RSTR");
+	}if(EXTG_P<5 && RGNR_P>0){
+		EXTG_P=5; Visible("RGNR"); EXTG_F();
+	}if(BTOD_P<1 && RGNR_P>0){
+		BTOD_P=1; Visible("RGNR"); BTOD_F();
+	}
+}
+function RSTR_F(){
+	Point(RSTR_P,1,"RSTR");
+	if(RGNR_P<1 && RSTR_P>0){
+		RGNR_P=1; Visible("RSTR"); RGNR_F();
+	}
+}
+function EMGN_F(){
+	Point(EMGN_P,1,"EMGN");
+	if(GRSC_P<1 && EMGN_P>0){
+		GRSC_P=1; Visible("EMGN"); GRSC_F();
+	}if(RGNR_P<1 && EMGN_P>0){
+		RGNR_P=1; Visible("EMGN"); RGNR_F();
+	}
+}
+function GLDS_F(){
+	Point(GLDS_P,5,"GLDS");
+	if(GLDS_P<1){
+		Disable("SHKE"); if(SHKE_P>0){ SHKE_P=0; SHKE_F();}
+	}if(GLDS_P>=1){
+		Visible("SHKE");
+	}
+}
+function WOGL_F(){
+	Point(WOGL_P,5,"WOGL");
+	if(WOGL_P<1){
+		Disable("SLOC"); if(SLOC_P>0){ SLOC_P=0; SLOC_F();}
+	}if(WOGL_P>=1){
+		Visible("SLOC");
+	}
+}
+function SLOC_F(){
+	Point(SLOC_P,5,"SLOC");
+	if(WOGL_P<1 && SLOC_P>0){
+		WOGL_P=1; Visible("SLOC"); WOGL_F();
+	}
+}
+function SHKE_F(){
+	Point(SHKE_P,5,"SHKE");
+	if(GLDS_P<1 && SHKE_P>0){
+		GLDS_P=1; Visible("SHKE"); GLDS_F();
+	}
+}
+
+// イベント
+function setPoint(parts,point){
+	if(parts == "GAPP") { if(point>=0 && point<=1 ) GAPP_P=point; GAPP_F(); }
+	if(parts == "KPRC") { if(point>=0 && point<=1 ) KPRC_P=point; KPRC_F(); }
+	if(parts == "EMDV") { if(point>=0 && point<=1 ) EMDV_P=point; EMDV_F(); }
+	if(parts == "GRSC") { if(point>=0 && point<=1 ) GRSC_P=point; GRSC_F(); }
+	if(parts == "BLDG") { if(point>=0 && point<=3 ) BLDG_P=point; BLDG_F(); }
+	if(parts == "EXTG") { if(point>=0 && point<=10) EXTG_P=point; EXTG_F(); }
+	if(parts == "BTOD") { if(point>=0 && point<=1 ) BTOD_P=point; BTOD_F(); }
+	if(parts == "RGNR") { if(point>=0 && point<=3 ) RGNR_P=point; RGNR_F(); }
+	if(parts == "RSTR") { if(point>=0 && point<=1 ) RSTR_P=point; RSTR_F(); }
+	if(parts == "EMGN") { if(point>=0 && point<=1 ) EMGN_P=point; EMGN_F(); }
+	if(parts == "GLDS") { if(point>=0 && point<=5 ) GLDS_P=point; GLDS_F(); }
+	if(parts == "WOGL") { if(point>=0 && point<=5 ) WOGL_P=point; WOGL_F(); }
+	if(parts == "SLOC") { if(point>=0 && point<=5 ) SLOC_P=point; SLOC_F(); }
+	if(parts == "SHKE") { if(point>=0 && point<=5 ) SHKE_P=point; SHKE_F(); }
+
+	ShowPoint();
+}
+
+
+function ShowPoint(){
+	GDLV_P = GAPP_P + KPRC_P + EMDV_P + GRSC_P
+		+ BLDG_P + EXTG_P + BTOD_P + RGNR_P
+		+ RSTR_P + EMGN_P + GLDS_P + WOGL_P
+		+ SLOC_P + SHKE_P + 1;
+	showMsgG();
+}
+
+function showMsgG(){
+	var nextExp
+		= new Array(0,0.4,0.9,1.6,2.5,3.6,4.9,6.4,
+			8.1,10,12.1,14.4,16.9,19.6,22.5,25.6,
+			28.9,32.4,36.1,40,44.1,48.4,52.9,
+			57.6,62.5,67.6,72.9,78.4,84.1,90,96.1,
+			102.4,108.9,115.6,122.5,129.6,136.9,
+			144.4,152.1,160,168.1,176.4,184.9,193.6,
+			202.9,211.6,220.9,230.4,240.1,250);
+	var totalExp
+		= new Array(0.4,1.3,2.9,5.4,9,13.9,20.3,
+			28.4,38.4,50.5,64.9,81.8,101.4,123.9,
+			149.5,178.4,210.8,246.9,286.9,331,379.4,
+			432.3,489.9,552.4,620,692.9,771.3,855.4,
+			945.4,1041.5,1143.9,1252.8,1368.4,1490.9,
+			1620.5,1757.4,1901.8,2053.9,2213.9,2382,
+			2558.4,2743.3,2936.9,3139.4,3351,3571.9,
+			3802.3,4042.4,4292.4);
+
+	if(GDLV_P <= 50){
+		document.getElementById("msgid").style.backgroundColor = "#ffffff";
+		document.getElementById("msgid").innerHTML = " Guild Lv : " + GDLV_P
+			+ "　/ Exp Total : " + totalExp[GDLV_P-1]
+			+ "M　Next: " + nextExp[GDLV_P] + "M";
+	}if(GDLV_P > 50){
+		document.getElementById("msgid").style.backgroundColor = "#ffdddd";
+		document.getElementById("msgid").innerHTML = " error ";
+	}
+}
+
+//コントロール関連
+function Clear(){
+	GAPP_P = KPRC_P = EMDV_P = GRSC_P
+	= BLDG_P = EXTG_P = BTOD_P = RGNR_P
+	= RSTR_P = EMGN_P = GLDS_P = WOGL_P
+	= SLOC_P = SHKE_P
+	= 0;
+	GDLV_P = 1;
+	GAPP_F(); KPRC_F(); EMDV_F(); GRSC_F();
+	BLDG_F(); EXTG_F(); BTOD_F(); RGNR_F();
+	RSTR_F(); EMGN_F(); GLDS_F(); WOGL_F();
+	SLOC_F(); SHKE_F();
+	ShowPoint();
+
+	setAlertLayer("All Points have been cleared.",1);
+}
+
+function Save(mode){
+	var tdata = new Array(15);
+	tdata[0]  = GAPP_P;
+	tdata[1]  = KPRC_P;
+	tdata[2]  = EMDV_P;
+	tdata[3]  = GRSC_P;
+	tdata[4]  = BLDG_P;
+	tdata[5]  = EXTG_P;
+	tdata[6]  = BTOD_P;
+	tdata[7]  = RGNR_P;
+	tdata[8]  = RSTR_P;
+	tdata[9]  = EMGN_P;
+	tdata[10] = GLDS_P;
+	tdata[11] = WOGL_P;
+	tdata[12] = SLOC_P;
+	tdata[13] = SHKE_P;
+	tdata[14] = 11;
+
+	code = encode(tdata,ver);
+
+	if(mode == "scode"){
+		return code;
+	}if(mode == "cookie"){
+		Save2(code);
+	}
+}
+
+function Load(mode){
+	code = loadType(mode);
+	if(code){
+		tdata = decode(code,ver);
+
+		GAPP_P = tdata[0];
+		KPRC_P = tdata[1];
+		EMDV_P = tdata[2];
+		GRSC_P = tdata[3];
+		BLDG_P = tdata[4];
+		EXTG_P = tdata[5];
+		BTOD_P = tdata[6];
+		RGNR_P = tdata[7];
+		RSTR_P = tdata[8];
+		EMGN_P = tdata[9];
+		GLDS_P = tdata[10];
+		WOGL_P = tdata[11];
+		SLOC_P = tdata[12];
+		SHKE_P = tdata[13];
+	}
+	GAPP_F(); KPRC_F(); EMDV_F(); GRSC_F();
+	BLDG_F(); EXTG_F(); BTOD_F(); RGNR_F();
+	RSTR_F(); EMGN_F(); GLDS_F(); WOGL_F();
+	SLOC_F(); SHKE_F();
+
+	ShowPoint();
+}
+
+</script>
+
+</head>
+
+<body onLoad="Init()" onmousewheel="return false;">
+
+<div id="msgid" style="position:absolute; top:8px; left:10px; width:340px; padding:3px;">Loading...</div>
+
+<div style="position:absolute; top:8px; left:360px; width:900px;">
+<form name="Msg">
+Job Change<nobr>
+
+<select name="jobchg1" onchange="JCHF_P=this.value; showMsg()">
+<option value="50" selected>Job50
+<option value="49">Job49
+
+<option value="48">Job48
+<option value="47">Job47
+<option value="46">Job46
+<option value="45">Job45
+<option value="44">Job44
+<option value="43">Job43
+<option value="42">Job42
+<option value="41">Job41
+<option value="40">Job40
+</select>
+<b>＞</b>
+<select name="jobchg2" onchange="JCHT_P=this.value; showMsg()">
+<option value="70" selected>Job70
+<option value="69">Job69
+<option value="68">Job68
+<option value="67">Job67
+<option value="66">Job66
+<option value="65">Job65
+<option value="64">Job64
+<option value="63">Job63
+<option value="62">Job62
+<option value="61">Job61
+<option value="60">Job60
+<option value="59">Job59
+<option value="58">Job58
+<option value="57">Job57
+<option value="56">Job56
+<option value="55">Job55
+<option value="54">Job54
+<option value="53">Job53
+<option value="52">Job52
+<option value="51">Job51
+<option value="50">Job50
+
+</select>
+　　
+Name <input type="text" name="chrName" size=20 maxlength=20 value="" title="Name your save slot">　
+<u>
+<a class="con" href="JavaScript:Save('cookie');" title="Save to Cookie"> Save </a>　
+<a class="con" href="JavaScript:Load('cookie');" title="Load from Cookie"> Load </a>　
+<a class="con" href="JavaScript:Reset();"			title="Clear all points"> Reset</a>　
+<a class="con" href="JavaScript:codeCopy();"		title="Skill Points to URL"> URL</a>　
+<a class="con" href="JavaScript:DeleteSlot();"		title="Delete Save Slot"> Delete </a>　
+<a class="con" href="../skill4/"	title="Home">Home</a>　
+
+</u>　
+<select name="Data" style="width:200px;">
+<option value="1">slot 1 : no save
+<option value="2">slot 2 : no save
+<option value="3">slot 3 : no save
+<option value="4">slot 4 : no save
+<option value="5">slot 5 : no save
+<option value="6">slot 6 : no save
+<option value="7">slot 7 : no save
+<option value="8">slot 8 : no save
+<option value="9">slot 9 : no save
+<option value="10">slot 10 : no save
+<option value="11">slot 11 : no save
+<option value="12">slot 12 : no save
+<option value="13">slot 13 : no save
+<option value="14">slot 14 : no save
+<option value="15">slot 15 : no save
+<option value="16">slot 16 : no save
+<option value="17">slot 17 : no save
+<option value="18">slot 18 : no save
+<option value="19">slot 19 : no save
+<option value="20">slot 20 : no save
+<option value="21">slot 21 : no save
+<option value="22">slot 22 : no save
+<option value="23">slot 23 : no save
+<option value="24">slot 24 : no save
+<option value="25">slot 25 : no save
+<option value="26">slot 26 : no save
+<option value="27">slot 27 : no save
+<option value="28">slot 28 : no save
+<option value="29">slot 29 : no save
+<option value="30">slot 30 : no save
+</select>
+</nobr>
+<input type="hidden" name="scode" size=32 value="" readonly>
+
+</form>
+</div>
+
+
+
+<table class="job" id="GAPP"
+	cellspacing=0 cellpadding=0 width=130 height=15 border=0
+	style="position:absolute; top:50px; left:30;"
+	onclick="msclk(this.id,event.clientX,this.style.left)"
+	onmousewheel="mswhl(this.id)">
+<tr><td rowspan=2 width=26
+	style="background-image:url('img/icon_gld.png'); background-position:0px;">
+</td>
+<td width=114 height=16 align=center>
+<span class="help"
+	onmouseover="msovr(event.clientX,event.clientY,'GAPP')"
+	onmouseout="msout()">
+Guild Approval
+</span>
+</td></tr>
+<tr><td width=114 height=12></td></tr>
+</table>
+
+<table class="job" id="KPRC"
+	cellspacing=0 cellpadding=0 width=130 height=15 border=0
+	style="position:absolute; top:50px; left:230;"
+	onclick="msclk(this.id,event.clientX,this.style.left)"
+	onmousewheel="mswhl(this.id)">
+<tr><td rowspan=2 width=26
+	style="background-image:url('img/icon_gld.png'); background-position:-30px;">
+</td>
+<td width=114 height=16 align=center>
+<span class="help"
+	onmouseover="msovr(event.clientX,event.clientY,'KPRC')"
+	onmouseout="msout()">
+Contract with Kafra
+</span>
+</td></tr>
+<tr><td width=114 height=12></td></tr>
+</table>
+
+<table class="job" id="EMDV"
+	cellspacing=0 cellpadding=0 width=130 height=15 border=0
+	style="position:absolute; top:50px; left:630;"
+	onclick="msclk(this.id,event.clientX,this.style.left)"
+	onmousewheel="mswhl(this.id)">
+<tr><td rowspan=2 width=26
+	style="background-image:url('img/icon_gld.png'); background-position:-60px;">
+</td>
+<td width=114 height=16 align=center>
+<span class="help"
+	onmouseover="msovr(event.clientX,event.clientY,'EMDV')"
+	onmouseout="msout()">
+<font size="1">Permanent Development</font>
+</span>
+</td></tr>
+<tr><td width=114 height=12></td></tr>
+</table>
+
+<table class="job" id="GRSC"
+	cellspacing=0 cellpadding=0 width=130 height=15 border=0
+	style="position:absolute; top:110px; left:430;"
+	onclick="msclk(this.id,event.clientX,this.style.left)"
+	onmousewheel="mswhl(this.id)">
+<tr><td rowspan=2 width=26
+	style="background-image:url('img/icon_gld.png'); background-position:-90px;">
+</td>
+<td width=114 height=16 align=center>
+<span class="help"
+	onmouseover="msovr(event.clientX,event.clientY,'GRSC')"
+	onmouseout="msout()">
+Guardian Research
+</span>
+</td></tr>
+<tr><td width=114 height=12></td></tr>
+</table>
+
+<table class="job" id="BLDG"
+	cellspacing=0 cellpadding=0 width=130 height=15 border=0
+	style="position:absolute; top:110px; left:630;"
+	onclick="msclk(this.id,event.clientX,this.style.left)"
+	onmousewheel="mswhl(this.id)">
+<tr><td rowspan=2 width=26
+	style="background-image:url('img/icon_gld.png'); background-position:-120px;">
+</td>
+<td width=114 height=16 align=center>
+<span class="help"
+	onmouseover="msovr(event.clientX,event.clientY,'BLDG')"
+	onmouseout="msout()">
+Strengthen Guardians
+</span>
+</td></tr>
+<tr><td width=114 height=12></td></tr>
+</table>
+
+<table class="job" id="EXTG"
+	cellspacing=0 cellpadding=0 width=130 height=15 border=0
+	style="position:absolute; top:110px; left:30;"
+	onclick="msclk(this.id,event.clientX,this.style.left)"
+	onmousewheel="mswhl(this.id)">
+<tr><td rowspan=2 width=26
+	style="background-image:url('img/icon_gld.png'); background-position:-150px;">
+</td>
+<td width=114 height=16 align=center>
+<span class="help"
+	onmouseover="msovr(event.clientX,event.clientY,'EXTG')"
+	onmouseout="msout()">
+Guild Extension
+</span></td></tr>
+<tr><td width=114 height=12></td></tr>
+</table>
+
+<table class="job" id="BTOD"
+	cellspacing=0 cellpadding=0 width=130 height=15 border=0
+	style="position:absolute; top:110px; left:230;"
+	onclick="msclk(this.id,event.clientX,this.style.left)"
+	onmousewheel="mswhl(this.id)">
+<tr><td rowspan=2 width=26
+	style="background-image:url('img/icon_gld.png'); background-position:-180px;">
+</td>
+<td width=114 height=16 align=center>
+<span class="help"
+	onmouseover="msovr(event.clientX,event.clientY,'BTOD')"
+	onmouseout="msout()">
+Battle Command
+</span>
+</td></tr>
+<tr><td width=114 height=12></td></tr>
+</table>
+
+<table class="job" id="RGNR"
+	cellspacing=0 cellpadding=0 width=130 height=15 border=0
+	style="position:absolute; top:170px; left:230;"
+	onclick="msclk(this.id,event.clientX,this.style.left)"
+	onmousewheel="mswhl(this.id)">
+<tr><td rowspan=2 width=26
+	style="background-image:url('img/icon_gld.png'); background-position:-210px;">
+</td>
+<td width=114 height=16 align=center>
+<span class="help"
+	onmouseover="msovr(event.clientX,event.clientY,'RGNR')"
+	onmouseout="msout()">
+Regeneration</span></td></tr>
+<tr><td width=114 height=12></td></tr>
+</table>
+
+<table class="job" id="RSTR"
+	cellspacing=0 cellpadding=0 width=130 height=15 border=0
+	style="position:absolute; top:170px; left:30;"
+	onclick="msclk(this.id,event.clientX,this.style.left)"
+	onmousewheel="mswhl(this.id)">
+<tr><td rowspan=2 width=26
+	style="background-image:url('img/icon_gld.png'); background-position:-240px;">
+</td>
+<td width=114 height=16 align=center>
+<span class="help"
+	onmouseover="msovr(event.clientX,event.clientY,'RSTR')"
+	onmouseout="msout()">
+Restoration
+</span>
+</td></tr>
+<tr><td width=114 height=12></td></tr>
+</table>
+
+<table class="job" id="EMGN"
+	cellspacing=0 cellpadding=0 width=130 height=15 border=0
+	style="position:absolute; top:170px; left:430;"
+	onclick="msclk(this.id,event.clientX,this.style.left)"
+	onmousewheel="mswhl(this.id)">
+<tr><td rowspan=2 width=26
+	style="background-image:url('img/icon_gld.png'); background-position:-270px;">
+</td>
+<td width=114 height=16 align=center>
+<span class="help"
+	onmouseover="msovr(event.clientX,event.clientY,'EMGN')"
+	onmouseout="msout()">
+Urgent Call
+</span>
+</td></tr>
+<tr><td width=114 height=12></td></tr>
+</table>
+
+<table class="job" id="GLDS"
+	cellspacing=0 cellpadding=0 width=130 height=15 border=0
+	style="position:absolute; top:230px; left:30;"
+	onclick="msclk(this.id,event.clientX,this.style.left)"
+	onmousewheel="mswhl(this.id)">
+<tr><td rowspan=2 width=26
+	style="background-image:url('img/icon_gld.png'); background-position:-300px;">
+</td>
+<td width=114 height=16 align=center>
+<span class="help"
+	onmouseover="msovr(event.clientX,event.clientY,'GLDS')"
+	onmouseout="msout()">
+Great Leadership
+</span>
+</td></tr>
+<tr><td width=114 height=12></td></tr>
+</table>
+
+<table class="job" id="WOGL"
+	cellspacing=0 cellpadding=0 width=130 height=15 border=0
+	style="position:absolute; top:230px; left:430;"
+	onclick="msclk(this.id,event.clientX,this.style.left)"
+	onmousewheel="mswhl(this.id)">
+<tr><td rowspan=2 width=26
+	style="background-image:url('img/icon_gld.png'); background-position:-330px;">
+</td>
+<td width=114 height=16 align=center>
+<span class="help"
+	onmouseover="msovr(event.clientX,event.clientY,'WOGL')"
+	onmouseout="msout()">
+Glorious Wounds</span></td></tr>
+<tr><td width=114 height=12></td></tr>
+</table>
+
+<table class="job" id="SLOC"
+	cellspacing=0 cellpadding=0 width=130 height=15 border=0
+	style="position:absolute; top:230px; left:630;"
+	onclick="msclk(this.id,event.clientX,this.style.left)"
+	onmousewheel="mswhl(this.id)">
+<tr><td rowspan=2 width=26
+	style="background-image:url('img/icon_gld.png'); background-position:-360px;">
+</td>
+<td width=114 height=16 align=center>
+<span class="help"
+	onmouseover="msovr(event.clientX,event.clientY,'SLOC')"
+	onmouseout="msout()">
+Cold Heart
+</span>
+</td></tr>
+<tr><td width=114 height=12></td></tr>
+</table>
+
+<table class="job" id="SHKE"
+	cellspacing=0 cellpadding=0 width=130 height=15 border=0
+	style="position:absolute; top:230px; left:230;"
+	onclick="msclk(this.id,event.clientX,this.style.left)"
+	onmousewheel="mswhl(this.id)">
+<tr><td rowspan=2 width=26
+	style="background-image:url('img/icon_gld.png'); background-position:-390px;">
+</td>
+<td width=114 height=16 align=center>
+<span class="help"
+	onmouseover="msovr(event.clientX,event.clientY,'SHKE')"
+	onmouseout="msout()">
+Sharp Gaze</span></td></tr>
+<tr><td width=114 height=12></td></tr>
+</table>
+
+<table class="lst" cellpadding=0 cellspacing=0 style="position:absolute; top:300px; left:30px; width:0px; height:0px;">
+	<tr>
+		<td class="lst0">Guild Lv</td>
+		<td class="lst1">Exp</td>
+		<td class="lst0">Guild Lv</td>
+		<td class="lst1">Exp</td>
+		<td class="lst0">Guild Lv</td>
+		<td class="lst1">Exp</td>
+		<td class="lst0">Guild Lv</td>
+		<td class="lst1">Exp</td>
+	</tr>
+	<tr>
+		<td class="lst0">1</td>
+		<td class="lst1">-</td>
+		<td class="lst0">14</td>
+		<td class="lst1">19,600,000</td>
+		<td class="lst0">27</td>
+		<td class="lst1">72,900,000</td>
+		<td class="lst0">40</td>
+		<td class="lst1">160,000,000</td>
+	</tr>
+	<tr>
+		<td class="lst0">2</td>
+		<td class="lst1">400,000</td>
+		<td class="lst0">15</td>
+		<td class="lst1">22,500,000</td>
+		<td class="lst0">28</td>
+		<td class="lst1">78,400,000</td>
+		<td class="lst0">41</td>
+		<td class="lst1">168,100,000</td>
+	</tr>
+	<tr>
+		<td class="lst0">3</td>
+		<td class="lst1">900,000</td>
+		<td class="lst0">16</td>
+		<td class="lst1">25,600,000</td>
+		<td class="lst0">29</td>
+		<td class="lst1">84,100,000</td>
+		<td class="lst0">42</td>
+		<td class="lst1">179,400,000</td>
+	</tr>
+	<tr>
+		<td class="lst0">4</td>
+		<td class="lst1">1,600,000</td>
+		<td class="lst0">17</td>
+		<td class="lst1">28,900,000</td>
+		<td class="lst0">30</td>
+		<td class="lst1">90,000,000</td>
+		<td class="lst0">43</td>
+		<td class="lst1">184,900,000</td>
+	</tr>
+	<tr>
+		<td class="lst0">5</td>
+		<td class="lst1">2,500,000</td>
+		<td class="lst0">18</td>
+		<td class="lst1">32,400,000</td>
+		<td class="lst0">31</td>
+		<td class="lst1">96,100,000</td>
+		<td class="lst0">44</td>
+		<td class="lst1">193,600,000</td>
+	</tr>
+	<tr>
+		<td class="lst0">6</td>
+		<td class="lst1">3,600,000</td>
+		<td class="lst0">19</td>
+		<td class="lst1">36,100,000</td>
+		<td class="lst0">32</td>
+		<td class="lst1">102,400,000</td>
+		<td class="lst0">45</td>
+		<td class="lst1">202,900,000</td>
+	</tr>
+	<tr>
+		<td class="lst0">7</td>
+		<td class="lst1">4,900,000</td>
+		<td class="lst0">20</td>
+		<td class="lst1">40,000,000</td>
+		<td class="lst0">33</td>
+		<td class="lst1">108,900,000</td>
+		<td class="lst0">46</td>
+		<td class="lst1">211,600,000</td>
+	</tr>
+	<tr>
+		<td class="lst0">8</td>
+		<td class="lst1">6,400,000</td>
+		<td class="lst0">21</td>
+		<td class="lst1">44,100,000</td>
+		<td class="lst0">34</td>
+		<td class="lst1">115,600,000</td>
+		<td class="lst0">47</td>
+		<td class="lst1">220,900,000</td>
+	</tr>
+	<tr>
+		<td class="lst0">9</td>
+		<td class="lst1">8,100,000</td>
+		<td class="lst0">22</td>
+		<td class="lst1">48,400,000</td>
+		<td class="lst0">35</td>
+		<td class="lst1">122,500,000</td>
+		<td class="lst0">48</td>
+		<td class="lst1">230,400,000</td>
+	</tr>
+	<tr>
+		<td class="lst0">10</td>
+		<td class="lst1">10,000,000</td>
+		<td class="lst0">23</td>
+		<td class="lst1">52,900,000</td>
+		<td class="lst0">36</td>
+		<td class="lst1">129,600,000</td>
+		<td class="lst0">49</td>
+		<td class="lst1">240,100,000</td>
+	</tr>
+	<tr>
+		<td class="lst0">11</td>
+		<td class="lst1">12,100,000</td>
+		<td class="lst0">24</td>
+		<td class="lst1">57,600,000</td>
+		<td class="lst0">37</td>
+		<td class="lst1">136,900,000</td>
+		<td class="lst0">50</td>
+		<td class="lst1">250,000,000</td>
+	</tr>
+	<tr>
+		<td class="lst0">12</td>
+		<td class="lst1">14,400,000</td>
+		<td class="lst0">25</td>
+		<td class="lst1">62,500,000</td>
+		<td class="lst0">38</td>
+		<td class="lst1">144,400,000</td>
+		<td> </td>
+		<td> </td>
+	</tr>
+	<tr>
+		<td class="lst0">13</td>
+		<td class="lst1">16,900,000</td>
+		<td class="lst0">26</td>
+		<td class="lst1">67,600,000</td>
+		<td class="lst0">39</td>
+		<td class="lst1">152,100,000</td>
+		<td> </td>
+		<td> </td>
+	</tr>
+</table>
+
+
+<div id="skill"style="position:absolute; z-index:1;"></div>
+<div id="option1" style="position:absolute; top:0px; left:0px; width:0px; height:0px; background-image:url(img/alpha.png);" onclick="JavaScript:offOptionLayer();"></div>
+<div id="option2" style="position:absolute; top:0px; left:0px; width:0px; height:0px;"></div>
+<div id="dummy" style="position:absolute; top:0px; left:0px; width:1200px; height:800px; z-index:-1;"></div>
+
+</body>
+</html>
